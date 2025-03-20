@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from collections import Counter
@@ -69,39 +68,60 @@ def build_and_predict(df, selected_day):
 
 st.set_page_config(page_title='אלגוריתם לוטו חכם - ליביו הוליביה', layout='centered')
 
-st.markdown("""
-    <style>
-    body {
-        background: linear-gradient(135deg, #000000, #1a1a1a);
-        color: gold;
-    }
-    .stButton > button {
-        background-color: gold;
-        color: black;
-        border-radius: 8px;
-        border: 1px solid gold;
-        font-weight: bold;
-        transition: 0.3s;
-    }
-    .stButton > button:hover {
-        background-color: #ffcc00;
-        color: black;
-        transform: scale(1.05);
-    }
-    .prediction-card {
-        background-color: rgba(51, 51, 51, 0.9);
-        padding: 12px;
-        border-radius: 10px;
-        margin-bottom: 12px;
-        color: gold;
-        font-weight: bold;
-        box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.3);
-    }
-    </style>
-""", unsafe_allow_html=True)
+st.markdown("""<style>
+body {
+    background: linear-gradient(135deg, #000000, #1a1a1a);
+    color: gold;
+}
+.stButton > button {
+    background-color: gold;
+    color: black;
+    border-radius: 8px;
+    border: 1px solid gold;
+    font-weight: bold;
+    transition: 0.3s;
+    box-shadow: 0 0 10px gold;
+}
+.stButton > button:hover {
+    background-color: #ffcc00;
+    color: black;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px gold;
+}
+.prediction-card {
+    background-color: rgba(51, 51, 51, 0.9);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    color: gold;
+    font-weight: bold;
+    border: 1px solid gold;
+    box-shadow: 0px 0px 25px rgba(255, 215, 0, 0.4);
+    animation: fadeIn 1s ease-in-out;
+}
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+#footer-marquee {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    border-top: 1px solid gold;
+    color: gold;
+    padding: 10px 0;
+    font-weight: bold;
+    animation: marquee 15s linear infinite;
+}
+@keyframes marquee {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
+}
+</style>""", unsafe_allow_html=True)
 
-st.image('logo.png', use_column_width=False, width=200)
-st.title('🎯 אלגוריתם לוטו חכם במיוחד - עיצוב יוקרתי בשחור וזהב')
+st.image('logo.png', use_container_width=True)
+st.title('🎯 אלגוריתם לוטו חכם במיוחד - עיצוב פרימיום בשחור וזהב')
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
@@ -113,9 +133,8 @@ if uploaded_file is not None:
             predictions = build_and_predict(df, selected_day)
             for i, (nums, strong) in enumerate(predictions):
                 display_line = " ,".join(map(str, nums))
-                st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | מספר חזק: {strong}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700; animation: blink 1s infinite alternate;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
-st.markdown("""<hr style="border:1px solid gold;"> 
-<div style="text-align:center; color:gold; font-weight:bold;">נבנה על ידי ליביו הוליביה - עיצוב יוקרתי, חכם ומדויק בשחור וזהב עם לוגו מותאם!</div>""", unsafe_allow_html=True)
+st.markdown('<div id="footer-marquee">נבנה על ידי ליביו הוליביה</div>', unsafe_allow_html=True)
