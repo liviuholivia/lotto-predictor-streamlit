@@ -23,7 +23,7 @@ def build_and_predict(df, selected_day):
 
     hot = [num for num, _ in lotto_counts.most_common(20) if num <= 37]
     cold = [num for num, _ in lotto_counts.most_common()[-20:] if num <= 37]
-    medium = [num for num in range(1, 38) if num not in hot and num not in cold]
+    medium = [num for num in range(1, 38) if num not in hot and not in cold]
 
     hot_strong = [num for num, _ in strong_counts.most_common(3) if num <= 7]
 
@@ -60,7 +60,7 @@ def build_and_predict(df, selected_day):
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
         prediction = prediction[:6]
-        prediction.sort(reverse=True)
+        prediction.sort(reverse=True)  # עכשיו התוצאה תהיה בסדר יורד משמאל לימין
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
@@ -99,29 +99,15 @@ body {
     box-shadow: 0px 0px 25px rgba(255, 215, 0, 0.4);
     animation: fadeIn 1s ease-in-out;
 }
-@keyframes fadeIn {
-    from {opacity: 0;}
-    to {opacity: 1;}
-}
-#footer-marquee {
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    box-sizing: border-box;
-    border-top: 1px solid gold;
-    color: gold;
-    padding: 10px 0;
-    font-weight: bold;
-    animation: marquee 15s linear infinite;
-}
-@keyframes marquee {
-    from { transform: translateX(100%); }
-    to { transform: translateX(-100%); }
+#logo-img {
+    max-width: 150px;
+    display: block;
+    margin: auto;
 }
 </style>""", unsafe_allow_html=True)
 
-st.image('logo.png', use_container_width=True)
-st.title('🎯 אלגוריתם לוטו חכם במיוחד - עיצוב פרימיום בשחור וזהב')
+st.image('logo.png', use_container_width=False, width=150)
+st.title('🎯 אלגוריתם לוטו חכם במיוחד - מבוסס סטטיסטיקה, רצפים, מספרים חמים וקור')
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
@@ -137,4 +123,4 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
-st.markdown('<div id="footer-marquee">נבנה על ידי ליביו הוליביה</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">נבנה על ידי ליביו הוליביה</div>', unsafe_allow_html=True)
