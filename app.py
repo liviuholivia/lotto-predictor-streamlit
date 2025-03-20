@@ -73,11 +73,14 @@ uploaded_file = st.file_uploader('העלה קובץ CSV של תוצאות לוט
 selected_day = st.selectbox('בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
 
 if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file, encoding='windows-1255')
-    if st.button('צור תחזיות חכמות'):
-        predictions = build_and_predict(df, selected_day)
-        for i, (nums, strong) in enumerate(predictions):
-            st.write(f'תוצאה {i+1}: {", ".join(map(str, nums))} | מספר חזק: {strong}')
+    try:
+        df = pd.read_csv(uploaded_file, encoding='windows-1255')
+        if st.button('צור תחזיות חכמות'):
+            predictions = build_and_predict(df, selected_day)
+            for i, (nums, strong) in enumerate(predictions):
+                st.write(f'תוצאה {i+1}: {", ".join(map(str, nums))} | מספר חזק: {strong}')
+    except Exception as e:
+        st.error(f"שגיאה בטעינת הקובץ: {e}")
 
 st.markdown("""<hr>המערכת מבוססת על סטטיסטיקה, ניתוח דפוסי רצף, חום/קור, והתאמה ליום הגרלה.  
-נבנה על ידי ליביו הוליביה !""", unsafe_allow_html=True)
+נבנה על ידי ליביו הוליביה בסטייל!""", unsafe_allow_html=True)
