@@ -60,7 +60,7 @@ def build_and_predict(df, selected_day):
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
         prediction = prediction[:6]
-        prediction.sort(reverse=True)  # סדר יורד סופי ומדויק
+        prediction.sort(reverse=True)  # סדר יורד משמאל לימין, כמו בטופס לוטו רגיל
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
@@ -78,9 +78,10 @@ if uploaded_file is not None:
         if st.button('צור תחזיות חכמות'):
             predictions = build_and_predict(df, selected_day)
             for i, (nums, strong) in enumerate(predictions):
-                st.write(f'תוצאה {i+1}: {", ".join(map(str, nums))} | מספר חזק: {strong}')
+                display_line = " ,".join(map(str, nums))  # תצוגה מסודרת משמאל לימין במספרים יורדים
+                st.write(f'תוצאה {i+1}: {display_line} | מספר חזק: {strong}')
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
 st.markdown("""<hr>המערכת מבוססת על סטטיסטיקה, ניתוח דפוסי רצף, חום/קור, והתאמה ליום הגרלה.  
-נבנה על ידי ליביו הוליביה בסטייל!""", unsafe_allow_html=True)
+נבנה על ידי ליביו הוליביה !""", unsafe_allow_html=True)
