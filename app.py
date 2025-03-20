@@ -23,7 +23,7 @@ def build_and_predict(df, selected_day):
 
     hot = [num for num, _ in lotto_counts.most_common(20) if num <= 37]
     cold = [num for num, _ in lotto_counts.most_common()[-20:] if num <= 37]
-    medium = [num for num in range(1, 38) if num not in hot and not in cold]
+    medium = [num for num in range(1, 38) if num not in hot and num not in cold]
 
     hot_strong = [num for num, _ in strong_counts.most_common(3) if num <= 7]
 
@@ -60,7 +60,7 @@ def build_and_predict(df, selected_day):
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
         prediction = prediction[:6]
-        prediction.sort(reverse=True)  # עכשיו התוצאה תהיה בסדר יורד משמאל לימין
+        prediction.sort(reverse=True)  # סדר יורד משמאל לימין
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
@@ -80,13 +80,11 @@ body {
     border: 1px solid gold;
     font-weight: bold;
     transition: 0.3s;
-    box-shadow: 0 0 10px gold;
 }
 .stButton > button:hover {
     background-color: #ffcc00;
     color: black;
     transform: scale(1.05);
-    box-shadow: 0 0 20px gold;
 }
 .prediction-card {
     background-color: rgba(51, 51, 51, 0.9);
@@ -107,7 +105,7 @@ body {
 </style>""", unsafe_allow_html=True)
 
 st.image('logo.png', use_container_width=False, width=150)
-st.title('🎯 אלגוריתם לוטו חכם במיוחד - מבוסס סטטיסטיקה, רצפים, מספרים חמים וקור')
+st.title('🎯 אלגוריתם לוטו חכם במיוחד – מבוסס סטטיסטיקה, חום-קור ורצפים חכמים')
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
@@ -119,7 +117,7 @@ if uploaded_file is not None:
             predictions = build_and_predict(df, selected_day)
             for i, (nums, strong) in enumerate(predictions):
                 display_line = " ,".join(map(str, nums))
-                st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700; animation: blink 1s infinite alternate;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
