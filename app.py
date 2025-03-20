@@ -56,9 +56,10 @@ def build_and_predict(df, selected_day):
             random.sample(cold, 1) +
             random.sample(followers, 1)
         )
-        prediction = sorted(set(prediction_pool))[:6]
+        prediction = sorted(list(set(prediction_pool)), reverse=True)[:6]  # סדר יורד
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
+        prediction = sorted(prediction, reverse=True)  # לוודא סדר יורד גם לאחר ההשלמה
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
