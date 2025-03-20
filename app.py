@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 from collections import Counter
@@ -79,4 +78,4 @@ if uploaded_file is not None:
             st.write(f'תוצאה {i+1}: {", ".join(map(str, nums))} | מספר חזק: {strong}')
 
 st.markdown("""<hr>המערכת מבוססת על סטטיסטיקה, ניתוח דפוסי רצף, חום/קור, והתאמה ליום הגרלה.  
-נבנה במיוחד עבור ליביו הוליביה בסטייל!""", unsafe_allow_html=True)
+נבנה על ידי ליביו הוליביה !""", unsafe_allow_html=True)
