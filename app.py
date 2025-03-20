@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 from collections import Counter
@@ -60,28 +61,61 @@ def build_and_predict(df, selected_day):
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
         prediction = prediction[:6]
-        prediction.sort(reverse=True)  # סדר יורד משמאל לימין, כמו בטופס לוטו רגיל
+        prediction.sort(reverse=True)
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
     return predictions
 
 st.set_page_config(page_title='אלגוריתם לוטו חכם - ליביו הוליביה', layout='centered')
-st.title('🎯 אלגוריתם לוטו חכם במיוחד + מספר חזק')
 
-uploaded_file = st.file_uploader('העלה קובץ CSV של תוצאות לוטו:')
-selected_day = st.selectbox('בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
+st.markdown("""
+    <style>
+    body {
+        background: linear-gradient(135deg, #000000, #1a1a1a);
+        color: gold;
+    }
+    .stButton > button {
+        background-color: gold;
+        color: black;
+        border-radius: 8px;
+        border: 1px solid gold;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .stButton > button:hover {
+        background-color: #ffcc00;
+        color: black;
+        transform: scale(1.05);
+    }
+    .prediction-card {
+        background-color: rgba(51, 51, 51, 0.9);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+        color: gold;
+        font-weight: bold;
+        box-shadow: 0px 0px 15px rgba(255, 215, 0, 0.3);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.image('logo.png', use_column_width=False, width=200)
+st.title('🎯 אלגוריתם לוטו חכם במיוחד - עיצוב יוקרתי בשחור וזהב')
+
+uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
+selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
 
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file, encoding='windows-1255')
-        if st.button('צור תחזיות חכמות'):
+        if st.button('✨ צור תחזיות חכמות'):
             predictions = build_and_predict(df, selected_day)
             for i, (nums, strong) in enumerate(predictions):
-                display_line = " ,".join(map(str, nums))  # תצוגה מסודרת משמאל לימין במספרים יורדים
-                st.write(f'תוצאה {i+1}: {display_line} | מספר חזק: {strong}')
+                display_line = " ,".join(map(str, nums))
+                st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | מספר חזק: {strong}</div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
-st.markdown("""<hr>המערכת מבוססת על סטטיסטיקה, ניתוח דפוסי רצף, חום/קור, והתאמה ליום הגרלה.  
-נבנה על ידי ליביו הוליביה !""", unsafe_allow_html=True)
+st.markdown("""<hr style="border:1px solid gold;"> 
+<div style="text-align:center; color:gold; font-weight:bold;">נבנה על ידי ליביו הוליביה - עיצוב יוקרתי, חכם ומדויק בשחור וזהב עם לוגו מותאם!</div>""", unsafe_allow_html=True)
