@@ -60,7 +60,7 @@ def build_and_predict(df, selected_day):
         while len(prediction) < 6:
             prediction.append(random.choice(medium))
         prediction = prediction[:6]
-        prediction.sort(reverse=True)  # סדר יורד משמאל לימין
+        prediction.sort(reverse=True)  # סדר יורד
         strong_pick = random.choices(hot_strong + [random.randint(1, 7)], weights=[6, 6, 6, 2])[0]
         predictions.append((prediction, strong_pick))
 
@@ -116,7 +116,7 @@ if uploaded_file is not None:
         if st.button('✨ צור תחזיות חכמות'):
             predictions = build_and_predict(df, selected_day)
             for i, (nums, strong) in enumerate(predictions):
-                display_line = " ,".join(map(str, nums))
+                display_line = " ,".join(map(str, nums[::-1]))
                 st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
