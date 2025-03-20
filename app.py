@@ -121,5 +121,5 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ: {e}")
 
-st.markdown('<div style="text-align:center; color:gold; margin-top:10px;">התחזיות מבוססות על ניתוח סטטיסטי מתקדם והיסטוריית הגרלות ספציפית ליום הנבחר.<br>המספר החזק נבחר לפי דפוסים סטטיסטיים של הגרלות קודמות ליום שבחרת, בשילוב אלגוריתם הסתברות חכם.</div>', unsafe_allow_html=True)
 st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">נבנה על ידי ליביו הוליביה</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:gold; margin-top:10px;">התחזיות מבוססות על ניתוח סטטיסטי מתקדם והיסטוריית הגרלות ספציפית ליום הנבחר.<br>המספר החזק נבחר לפי דפוסים סטטיסטיים של הגרלות קודמות ליום שבחרת, בשילוב אלגוריתם הסתברות חכם.<br><br><b>איך זה עובד?</b><br>- האלגוריתם בודק יותר מ-50 הגרלות אחורה.<br>- מזהה מספרים חמים, קרים ובינוניים.<br>- לומד רצפים חוזרים ומכניס אותם לחיזוי.<br>- המספר החזק נבחר בשילוב סטטיסטיקה והגרלות קודמות ליום שבחרת.<br>- מייצר 14 תחזיות ייחודיות ומבוססות.</div>', unsafe_allow_html=True)
