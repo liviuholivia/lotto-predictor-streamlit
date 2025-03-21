@@ -114,7 +114,13 @@ st.title('🎯 אלגוריתם לוטו על-חכם – גרסת פרימיום
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
-history_length = st.selectbox('📊 בחר כמות הגרלות לניתוח:', [10, 50, 100])
+history_map = {
+    '🔥 תחזית אולטרה-חמה (10 הגרלות)': 10,
+    '⭐️ האיזון המושלם (50 הגרלות)': 50,
+    '🧠 עומק סופר-חכם (100 הגרלות)': 100
+}
+history_choice = st.selectbox('📊 בחר את סוג הניתוח:', list(history_map.keys()))
+history_length = history_map[history_choice]
 
 if uploaded_file is not None:
     try:
