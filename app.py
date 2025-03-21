@@ -101,7 +101,7 @@ def build_and_predict(df, selected_day):
 
     return predictions
 
-st.set_page_config(page_title='אלגוריתם לוטו על-חכם - גרסת דיבוג - ליביו הוליביה', layout='centered')
+st.set_page_config(page_title='אלגוריתם לוטו על-חכם - גרסת פרימיום - ליביו הוליביה', layout='centered')
 
 st.markdown("""<style>
 body {background: linear-gradient(135deg, #000000, #1a1a1a); color: gold;}
@@ -110,7 +110,7 @@ body {background: linear-gradient(135deg, #000000, #1a1a1a); color: gold;}
 </style>""", unsafe_allow_html=True)
 
 st.image('logo.png', use_container_width=False, width=150)
-st.title('🎯 גרסת דיבוג - אלגוריתם לוטו על-חכם')
+st.title('🎯 אלגוריתם לוטו על-חכם – גרסת פרימיום')
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
@@ -118,14 +118,12 @@ selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שליש�
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file, encoding='windows-1255')
-        st.write(f"הקובץ נטען עם {df.shape[0]} שורות.")
-        if st.button('✨ הפעל תחזיות דיבוג'):
+        if st.button('✨ צור תחזיות פרימיום'):
             predictions = build_and_predict(df, selected_day)
-            st.write(f"מספר תחזיות שנוצרו: {len(predictions)}")
             for i, (nums, strong) in enumerate(predictions):
                 display_line = " ,".join(map(str, nums[::-1]))
                 st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ או במהלך חישוב: {e}")
 
-st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">נבנה על ידי ליביו הוליביה - גרסת דיבוג מלאה.</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">Premium Edition by Liviu Holivia</div>', unsafe_allow_html=True)
