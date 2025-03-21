@@ -3,14 +3,14 @@ import pandas as pd
 from collections import Counter
 import random
 
-def build_and_predict(df, selected_day):
+def build_and_predict(df, selected_day, history_length):
     df['תאריך'] = pd.to_datetime(df['תאריך'], format='%d/%m/%Y')
     df['weekday'] = df['תאריך'].dt.day_name()
 
     reverse_day_map = {"שלישי": "Tuesday", "חמישי": "Thursday", "שבת": "Saturday"}
     selected_day_eng = reverse_day_map[selected_day]
 
-    df_filtered = df[df['weekday'] == selected_day_eng].head(100)  # 100 הגרלות אחרונות
+    df_filtered = df[df['weekday'] == selected_day_eng].head(history_length)
 
     numbers = []
     strong_nums = df_filtered['המספר החזק/נוסף'].values.tolist()
@@ -114,12 +114,13 @@ st.title('🎯 אלגוריתם לוטו על-חכם – גרסת פרימיום
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
+history_length = st.selectbox('📊 בחר כמות הגרלות לניתוח:', [10, 50, 100])
 
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file, encoding='windows-1255')
         if st.button('✨ צור תחזיות פרימיום'):
-            predictions = build_and_predict(df, selected_day)
+            predictions = build_and_predict(df, selected_day, history_length)
             for i, (nums, strong) in enumerate(predictions):
                 display_line = " ,".join(map(str, nums[::-1]))
                 st.markdown(f'<div class="prediction-card">תוצאה {i+1}: {display_line} | <span style="color:#FFD700;">מספר חזק: {strong}</span></div>', unsafe_allow_html=True)
