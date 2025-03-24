@@ -25,25 +25,38 @@ def build_and_predict(df, selected_day, history_length):
     cold = [num for num, _ in lotto_counts.most_common()[-15:]]
     medium = [num for num in range(1, 38) if num not in hot and num not in cold]
 
-    consecutive_pairs = Counter()
     rows = df_filtered[['1', '2', '3', '4', '5', '6']].values.tolist()
+
+    # דפוסי אלכסון משמאל לימין ומימין לשמאל
+    diagonal_up = [row for row in rows if all(row[i] < row[i+1] for i in range(5))]
+    diagonal_down = [row for row in rows if all(row[i] > row[i+1] for i in range(5))]
+
+    # זיהוי קלפים שמופיעים בעיקר בימים מסוימים
+    day_series = pd.to_datetime(df_filtered['תאריך'], format='%d/%m/%Y').dt.day_name()
+    day_numbers = {}
+    for num in range(1, 38):
+        appearances = df_filtered.apply(lambda row: num in row[['1', '2', '3', '4', '5', '6']].values, axis=1)
+        days_present = day_series[appearances].values.tolist()
+        if days_present:
+            most_common_day = Counter(days_present).most_common(1)[0]
+            if most_common_day[1] >= 2:
+                day_numbers[num] = most_common_day[0]
+
+    frequent_pairs = Counter()
     for row in rows:
         row_sorted = sorted(row)
         for i in range(len(row_sorted)-1):
             if row_sorted[i+1] - row_sorted[i] == 1:
-                consecutive_pairs[(row_sorted[i], row_sorted[i+1])] += 1
+                frequent_pairs[(row_sorted[i], row_sorted[i+1])] += 1
 
-    frequent_pairs = [pair for pair, count in consecutive_pairs.items() if count >= 2]
-
-    non_consecutive_pairs = Counter()
+    top_non_consecutive_pairs = Counter()
     for row in rows:
         for i in range(len(row)):
             for j in range(i+2, len(row)):
-                non_consecutive_pairs[(row[i], row[j])] += 1
-    top_non_consecutive_pairs = [pair for pair, count in non_consecutive_pairs.items() if count >= 2]
+                top_non_consecutive_pairs[(row[i], row[j])] += 1
 
-    recent_draws = df_filtered.head(10)
     momentum_numbers = Counter()
+    recent_draws = df_filtered.head(10)
     for col in ['1', '2', '3', '4', '5', '6']:
         momentum_numbers.update(recent_draws[col].values.tolist())
     top_momentum = [num for num, count in momentum_numbers.items() if count >= 3]
@@ -85,9 +98,13 @@ def build_and_predict(df, selected_day, history_length):
         )
 
         if frequent_pairs:
-            prediction_pool.extend(random.choice(frequent_pairs))
+            prediction_pool.extend(random.choice(list(frequent_pairs.keys())))
         if top_non_consecutive_pairs:
-            prediction_pool.extend(random.choice(top_non_consecutive_pairs))
+            prediction_pool.extend(random.choice(list(top_non_consecutive_pairs.keys())))
+        
+        # הוספת משקל גם למספרים שמופיעים בימים ספציפיים
+        day_bonus_nums = [num for num, day in day_numbers.items() if day == selected_day_eng]
+        prediction_pool.extend(random.sample(day_bonus_nums, min(len(day_bonus_nums), 2)))
 
         prediction = list(set(prediction_pool))
         while len(prediction) < 6:
@@ -101,7 +118,7 @@ def build_and_predict(df, selected_day, history_length):
 
     return predictions
 
-st.set_page_config(page_title='אלגוריתם לוטו על-חכם - גרסת פרימיום - ליביו הוליביה', layout='centered')
+st.set_page_config(page_title='אלגוריתם-על ללוטו - גרסת פרימיום - ליביו הוליביה', layout='centered')
 
 st.markdown("""<style>
 body {background: linear-gradient(135deg, #000000, #1a1a1a); color: gold;}
@@ -110,7 +127,7 @@ body {background: linear-gradient(135deg, #000000, #1a1a1a); color: gold;}
 </style>""", unsafe_allow_html=True)
 
 st.image('logo.png', use_container_width=False, width=150)
-st.title('🎯 אלגוריתם לוטו על-חכם – גרסת פרימיום')
+st.title('🎯 אלגוריתם-על ללוטו – גרסת פרימיום כולל דפוסי עומק')
 
 uploaded_file = st.file_uploader('📂 העלה קובץ CSV של תוצאות לוטו:')
 selected_day = st.selectbox('📅 בחר את יום ההגרלה:', ['שלישי', 'חמישי', 'שבת'])
@@ -125,7 +142,7 @@ history_length = history_map[history_choice]
 if uploaded_file is not None:
     try:
         df = pd.read_csv(uploaded_file, encoding='windows-1255')
-        if st.button('✨ צור תחזיות פרימיום'):
+        if st.button('✨ צור תחזיות אלגוריתם-על'):
             predictions = build_and_predict(df, selected_day, history_length)
             for i, (nums, strong) in enumerate(predictions):
                 display_line = " ,".join(map(str, nums[::-1]))
@@ -133,4 +150,4 @@ if uploaded_file is not None:
     except Exception as e:
         st.error(f"שגיאה בטעינת הקובץ או במהלך חישוב: {e}")
 
-st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">Premium Edition by Liviu Holivia</div>', unsafe_allow_html=True)
+st.markdown('<div style="text-align:center; color:gold; font-weight:bold;">Premium Super-Algorithm Edition by Liviu Holivia</div>', unsafe_allow_html=True)
